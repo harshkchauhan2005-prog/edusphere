@@ -149,8 +149,18 @@ const StudentMaterialList = ({ courseId }) => {
                                 <h4 className="font-bold text-slate-900 dark:text-white truncate">{mat.title}</h4>
                                 <p className="text-xs text-slate-500">{new Date(mat.createdAt).toLocaleDateString()}</p>
                             </div>
-                            <a href={mat.fileUrl?.startsWith('http') ? mat.fileUrl : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
-                                <span className="material-symbols-rounded">download</span>
+                            <a
+                                href="#"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    import('../../utils/fileHelper').then(m => {
+                                        window.open(m.getFileViewerUrl(mat.fileUrl), '_blank');
+                                    });
+                                }}
+                                className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0"
+                                title="View / Download"
+                            >
+                                <span className="material-symbols-rounded">visibility</span>
                             </a>
                         </div>
                     ))}

@@ -566,12 +566,17 @@ const StudentSpecial = () => {
 
                             <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <a
-                                    href={resource.fileUrl?.startsWith('http') ? resource.fileUrl : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${resource.fileUrl}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    href={import('../../utils/fileHelper').then(m => m.getFileViewerUrl(resource.fileUrl)).catch(() => resource.fileUrl)}
+                                    onClick={(e) => {
+                                        // Dynamic import for utility
+                                        e.preventDefault();
+                                        import('../../utils/fileHelper').then(m => {
+                                            window.open(m.getFileViewerUrl(resource.fileUrl), '_blank');
+                                        });
+                                    }}
                                     className="w-full flex items-center justify-center gap-2 py-2 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group-hover:bg-primary group-hover:text-slate-900 group-hover:border-primary"
                                 >
-                                    <span className="material-symbols-rounded text-[18px]">download</span> Download
+                                    <span className="material-symbols-rounded text-[18px]">visibility</span> View / Download
                                 </a>
                             </div>
                         </div>
