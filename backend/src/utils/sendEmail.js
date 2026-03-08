@@ -1,20 +1,27 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
+    // Strip accidental quotes from environment variables
+    const cleanUser = (process.env.SMTP_EMAIL || '').replace(/^["']|["']$/g, '').trim();
+    const cleanPass = (process.env.SMTP_PASSWORD || '').replace(/^["']|["']$/g, '').trim();
+
     // Create a transporter
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
         port: process.env.SMTP_PORT || 2525,
         secure: process.env.SMTP_PORT == 465, // True for 465, false for others
         auth: {
-            user: process.env.SMTP_EMAIL,
-            pass: process.env.SMTP_PASSWORD
+            user: cleanUser,
+            pass: cleanPass
         }
     });
 
     // Define email options
+    const cleanFromName = (process.env.FROM_NAME || 'EduSphere Admin').replace(/^["']|["']$/g, '').trim();
+    const cleanFromEmail = (process.env.FROM_EMAIL || 'noreply@edusphere.com').replace(/^["']|["']$/g, '').trim();
+
     const message = {
-        from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
+        from: `"${cleanFromName}" <${cleanFromEmail}>`,
         to: options.email,
         subject: options.subject,
         text: options.message,

@@ -24,6 +24,7 @@ app.use('/api/courses', require('./routes/courses'));
 app.use('/api/special-section', require('./routes/specialSection'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/proxy', require('./routes/proxy'));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to EduSphere API' });
