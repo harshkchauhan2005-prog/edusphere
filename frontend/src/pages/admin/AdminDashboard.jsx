@@ -63,7 +63,7 @@ const AdminDashboard = () => {
                 <div className="p-4 border-t border-slate-200 dark:border-slate-800">
                     <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl mb-4">
                         {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
-                            <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
+                            <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={user.profilePhoto.startsWith('http') ? user.profilePhoto : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
                         ) : (
                             <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={`https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=4ade80&color=fff&rounded=true`} />
                         )}
@@ -348,7 +348,7 @@ const AdminUsers = () => {
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700 overflow-hidden">
                                                     {u.profilePhoto && u.profilePhoto !== 'no-photo.jpg' ? (
-                                                        <img src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${u.profilePhoto.startsWith('/uploads') ? u.profilePhoto : '/uploads/profiles/' + u.profilePhoto}`} alt={u.name} className="w-full h-full object-cover" />
+                                                        <img src={u.profilePhoto.startsWith('http') ? u.profilePhoto : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${u.profilePhoto.startsWith('/uploads') ? u.profilePhoto : '/uploads/profiles/' + u.profilePhoto}`} alt={u.name} className="w-full h-full object-cover" />
                                                     ) : (
                                                         <img src={`https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff`} alt={u.name} />
                                                     )}
