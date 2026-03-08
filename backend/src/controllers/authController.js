@@ -36,9 +36,10 @@ exports.register = async (req, res, next) => {
         await user.save({ validateBeforeSave: false });
 
         // Create verification url
-        const verificationUrl = `${req.protocol}://localhost:5173/verifyemail/${verificationToken}`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const verificationUrl = `${frontendUrl}/verifyemail/${verificationToken}`;
 
-        const message = `Welcome to EduSphere! Please confirm your email address by making a PUT request to: \n\n ${verificationUrl}`;
+        const message = `Welcome to EduSphere! Please confirm your email address by visiting: \n\n ${verificationUrl}`;
 
         try {
             await sendEmail({
@@ -47,8 +48,9 @@ exports.register = async (req, res, next) => {
                 message
             });
         } catch (err) {
-            console.log('Verification Email Failed:', err);
-            // We still want to return the token even if email fails in dev
+            console.error('CRITICAL: Verification Email Failed to send to:', user.email);
+            console.error(err);
+            // We still want to return success in dev, but in prod this is a major issue
         }
 
         res.status(201).json({
@@ -117,8 +119,8 @@ exports.forgotPassword = async (req, res, next) => {
         await user.save({ validateBeforeSave: false });
 
         // Create reset url
-        // In local development, assuming frontend runs on 5173
-        const resetUrl = `${req.protocol}://localhost:5173/resetpassword/${resetToken}`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const resetUrl = `${frontendUrl}/resetpassword/${resetToken}`;
 
         const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
 

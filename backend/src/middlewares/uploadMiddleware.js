@@ -17,18 +17,22 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         // Allowed ext
         const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx|ppt|pptx|zip|txt|csv|xls|xlsx/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const ext = path.extname(file.originalname).toLowerCase();
+        const extname = filetypes.test(ext);
         const mimetype = filetypes.test(file.mimetype);
 
         if (!(mimetype || extname)) {
             throw new Error('Error: Only documents, images, and archives are allowed!');
         }
 
-        const isImage = /jpeg|jpg|png|gif/.test(path.extname(file.originalname).toLowerCase());
+        const isPdf = ext === '.pdf';
+        const isImage = /jpeg|jpg|png|gif/.test(ext);
 
         return {
             folder: 'edusphere_uploads',
-            resource_type: isImage ? 'image' : 'raw', // Force 'raw' for PDFs and docs to prevent delivery issues
+            // Using 'image' for PDFs allows Cloudinary to serve them with the correct MIME type for inline viewing
+            resource_type: isPdf ? 'image' : (isImage ? 'image' : 'raw'),
+            format: ext.replace('.', ''), // This ensuring the file has the correct extension in the URL
             public_id: `${file.fieldname}-${Date.now()}`
         };
     },
