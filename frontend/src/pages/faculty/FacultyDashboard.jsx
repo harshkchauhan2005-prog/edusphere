@@ -14,8 +14,6 @@ const FacultyDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -29,33 +27,17 @@ const FacultyDashboard = () => {
         { path: "/faculty/assignments", icon: "assignment", label: "Assignments" }
     ];
 
-    const handleNavClick = () => setIsMobileMenuOpen(false);
-
     return (
         <div className="flex min-h-screen bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 transition-colors duration-200">
-            {/* Mobile Menu Backdrop */}
-            {isMobileMenuOpen && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                />
-            )}
-
             {/* Sidebar Navigation */}
-            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col transform transition-transform duration-300 ease-in-out lg:transform-none ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                <div className="p-6 flex items-center justify-between lg:justify-start gap-2">
+            <aside className="w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 overflow-y-auto shrink-0">
+                <div className="p-6 flex items-center gap-2">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
                             <span className="material-symbols-rounded text-xl">auto_stories</span>
                         </div>
                         <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
                     </div>
-                    <button
-                        className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                        <span className="material-symbols-rounded">close</span>
-                    </button>
                 </div>
 
                 <nav className="flex-1 px-4 py-4 space-y-1 mt-2 overflow-y-auto">
@@ -65,7 +47,6 @@ const FacultyDashboard = () => {
                             <Link
                                 key={idx}
                                 to={link.path}
-                                onClick={handleNavClick}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive
                                     ? 'bg-primary/10 text-primary'
                                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -79,7 +60,7 @@ const FacultyDashboard = () => {
                 </nav>
 
                 <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-                    <Link to="/faculty/profile" onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400">
+                    <Link to="/faculty/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400">
                         <span className="material-symbols-rounded">person</span>
                         Profile
                     </Link>
@@ -94,43 +75,35 @@ const FacultyDashboard = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 lg:pl-0 p-4 lg:p-8 relative w-full h-screen overflow-y-auto">
-                <header className="flex items-center justify-between gap-4 mb-8 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md z-30 py-2 -mx-4 px-4 lg:-mx-8 lg:px-8 border-b border-transparent">
-                    <div className="flex items-center gap-3">
-                        <button
-                            className="lg:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg"
-                            onClick={() => setIsMobileMenuOpen(true)}
-                        >
-                            <span className="material-symbols-rounded">menu</span>
-                        </button>
-                        <div className="hidden sm:block">
-                            <h2 className="text-xl lg:text-2xl font-bold">Faculty Dashboard</h2>
-                            <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400">Welcome, {user?.name || 'Professor'}</p>
-                        </div>
+            <main className="flex-1 p-8 relative w-full h-screen overflow-y-auto">
+                <header className="flex items-center justify-between gap-4 mb-8 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md z-30 py-2 -mx-8 px-8 border-b border-transparent">
+                    <div>
+                        <h2 className="text-2xl font-bold">Faculty Dashboard</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">Welcome, {user?.name || 'Professor'}</p>
                     </div>
-                    <div className="flex items-center gap-2 lg:gap-4">
+                    <div className="flex items-center gap-4">
                         <div className="hidden md:block">
                             <GlobalSearch placeholder="Search courses..." />
                         </div>
-                        <button className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-card-dark relative hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
-                            <span className="material-symbols-rounded text-[18px] lg:text-[20px] text-slate-600 dark:text-slate-300">notifications</span>
+                        <button className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-card-dark relative hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                            <span className="material-symbols-rounded text-[20px] text-slate-600 dark:text-slate-300">notifications</span>
                             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-card-dark"></span>
                         </button>
-                        <div className="flex items-center gap-3 pl-2 lg:pl-4 border-l border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
                             <Link to="/faculty/profile">
                                 {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
-                                    <img alt="User Profile" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
+                                    <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
                                 ) : (
-                                    <img alt="Profile Avatar" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src={`https://ui-avatars.com/api/?name=${user?.name || 'Professor'}&background=1E3A8A&color=fff`} />
+                                    <img alt="Profile Avatar" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src={`https://ui-avatars.com/api/?name=${user?.name || 'Professor'}&background=1E3A8A&color=fff`} />
                                 )}
                             </Link>
                         </div>
-                        <div className="h-6 lg:h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
                         <button
                             onClick={toggleTheme}
-                            className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
-                            <span className="material-symbols-rounded text-[18px] lg:text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
+                            <span className="material-symbols-rounded text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
                         </button>
                     </div>
                 </header>
