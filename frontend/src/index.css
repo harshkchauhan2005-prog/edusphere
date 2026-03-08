@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@theme {
+    --color-primary: #2DD4BF;
+    --color-background-light: #F8FAFC;
+    --color-background-dark: #121212;
+    --color-card-dark: #1E1E1E;
+    --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
+    --font-sans: "Inter", sans-serif;
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.hero-gradient {
+    background: radial-gradient(circle at 10% 20%, rgba(45, 212, 191, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(45, 212, 191, 0.1) 0%, transparent 40%);
+}
+
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+body {
+    background-color: #F8FAFC;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+}
