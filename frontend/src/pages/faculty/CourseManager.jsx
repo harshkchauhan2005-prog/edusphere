@@ -365,7 +365,7 @@ const MaterialManager = ({ courseId }) => {
                                     <h4 className="font-bold text-slate-900 dark:text-white truncate">{mat.title}</h4>
                                     <p className="text-xs text-slate-500">{new Date(mat.createdAt).toLocaleDateString()}</p>
                                 </div>
-                                <a href={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
+                                <a href={mat.fileUrl?.startsWith('http') ? mat.fileUrl : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
                                     <span className="material-symbols-rounded">download</span>
                                 </a>
                             </div>
@@ -882,7 +882,7 @@ const GradeAssignmentSubmissions = ({ courseId, assignment, onBack }) => {
 
                 <div className="mb-8 p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl">
                     <h4 className="font-bold mb-4">Student Submission</h4>
-                    <a href={`http://localhost:5000${activeResult.submissionFile}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+                    <a href={activeResult.submissionFile?.startsWith('http') ? activeResult.submissionFile : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${activeResult.submissionFile}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
                         <span className="material-symbols-rounded">download</span> Download Attachment
                     </a>
                 </div>

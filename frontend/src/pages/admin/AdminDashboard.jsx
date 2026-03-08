@@ -14,6 +14,8 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -22,20 +24,38 @@ const AdminDashboard = () => {
     const navLinks = [
         { path: "/admin", icon: "dashboard", label: "Dashboard", exact: true },
         { path: "/admin/users", icon: "group", label: "User Management" },
-        { path: "/admin/departments", icon: "account_tree", label: "Dept & Subjects" },
-        { path: "/admin/enrollments", icon: "school", label: "Enrollments" },
-        { path: "/admin/settings", icon: "settings", label: "Settings" }
+        { path: "/admin/courses", icon: "library_books", label: "Course Management" },
+        { path: "/admin/departments", icon: "domain", label: "Departments" },
+        { path: "/admin/subjects", icon: "subject", label: "Subjects" }
     ];
+
+    const handleNavClick = () => setIsMobileMenuOpen(false);
 
     return (
         <div className={`flex min-h-screen ${isDark ? 'dark bg-background-dark text-slate-100' : 'bg-background-light text-slate-900'} transition-colors duration-200`}>
+            {/* Mobile Menu Backdrop */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Sidebar Navigation */}
-            <aside className="w-64 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 hidden lg:flex flex-col sticky top-0 h-screen bg-white dark:bg-card-dark z-50">
-                <div className="p-6 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900">
-                        <span className="material-symbols-rounded text-xl">auto_stories</span>
+            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col transform transition-transform duration-300 ease-in-out lg:transform-none ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="p-6 flex items-center justify-between lg:justify-start gap-3">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white">
+                            <span className="material-symbols-rounded text-xl">admin_panel_settings</span>
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
                     </div>
-                    <span className="text-xl font-bold tracking-tight">EduSphere</span>
+                    <button
+                        className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <span className="material-symbols-rounded">close</span>
+                    </button>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto">
@@ -46,6 +66,7 @@ const AdminDashboard = () => {
                             <Link
                                 key={idx}
                                 to={link.path}
+                                onClick={handleNavClick}
                                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive
                                     ? 'bg-primary/10 text-primary font-medium'
                                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -73,7 +94,7 @@ const AdminDashboard = () => {
 
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors cursor-pointer"
                     >
                         <span className="material-symbols-rounded text-[18px]">logout</span>
                         Sign Out
@@ -82,22 +103,27 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-                <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-card-dark/80 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-10">
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative w-full">
+                <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-card-dark/80 backdrop-blur-md flex items-center justify-between px-4 lg:px-8 sticky top-0 z-10 w-full">
                     <div className="flex items-center gap-4 flex-1">
-                        <span className="material-symbols-rounded text-slate-400 lg:hidden cursor-pointer">menu</span>
+                        <button
+                            className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 lg:hidden cursor-pointer p-2 -ml-2 rounded-lg"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                        >
+                            <span className="material-symbols-rounded">menu</span>
+                        </button>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <button className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 relative transition-colors">
-                            <span className="material-symbols-rounded text-[20px]">notifications</span>
+                    <div className="flex items-center gap-2 lg:gap-4">
+                        <button className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 relative transition-colors">
+                            <span className="material-symbols-rounded text-[18px] lg:text-[20px]">notifications</span>
                             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-card-dark"></span>
                         </button>
-                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                        <div className="h-6 lg:h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
                         <button
                             onClick={toggleTheme}
-                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
-                            <span className="material-symbols-rounded text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
+                            <span className="material-symbols-rounded text-[18px] lg:text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
                         </button>
                     </div>
                 </header>

@@ -26,7 +26,7 @@ exports.uploadMaterial = async (req, res, next) => {
         const material = await Material.create({
             courseId,
             title,
-            fileUrl: `/uploads/${req.file.filename}`,
+            fileUrl: req.file.path, // Cloudinary uses req.file.path for the URL
             uploadedBy: req.user.id
         });
 

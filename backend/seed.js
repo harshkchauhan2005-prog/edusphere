@@ -36,25 +36,29 @@ const seedDatabase = async () => {
         }
 
         // 2. Create Departments
-        const deptNames = ['Computer Science', 'Mechanical Engineering', 'Business Administration'];
+        const deptNames = [
+            { name: 'Computer Science', code: 'CS' },
+            { name: 'Mechanical Engineering', code: 'ME' },
+            { name: 'Business Administration', code: 'BBA' }
+        ];
         const depts = {};
-        for (const name of deptNames) {
-            let dept = await Department.findOne({ name });
+        for (const deptData of deptNames) {
+            let dept = await Department.findOne({ name: deptData.name });
             if (!dept) {
-                dept = await Department.create({ name });
-                console.log(`Created department: ${name}`);
+                dept = await Department.create(deptData);
+                console.log(`Created department: ${deptData.name} (${deptData.code})`);
             }
-            depts[name] = dept;
+            depts[deptData.name] = dept;
         }
 
         // 3. Create Default Subjects
         const subjects = [
-            { name: 'Introduction to Programming', departmentId: depts['Computer Science']._id },
-            { name: 'Data Structures', departmentId: depts['Computer Science']._id },
-            { name: 'Thermodynamics', departmentId: depts['Mechanical Engineering']._id },
-            { name: 'Fluid Mechanics', departmentId: depts['Mechanical Engineering']._id },
-            { name: 'Accounting 101', departmentId: depts['Business Administration']._id },
-            { name: 'Microeconomics', departmentId: depts['Business Administration']._id }
+            { name: 'Introduction to Programming', code: 'CS101', departmentId: depts['Computer Science']._id },
+            { name: 'Data Structures', code: 'CS201', departmentId: depts['Computer Science']._id },
+            { name: 'Thermodynamics', code: 'ME101', departmentId: depts['Mechanical Engineering']._id },
+            { name: 'Fluid Mechanics', code: 'ME201', departmentId: depts['Mechanical Engineering']._id },
+            { name: 'Accounting 101', code: 'BBA101', departmentId: depts['Business Administration']._id },
+            { name: 'Microeconomics', code: 'BBA201', departmentId: depts['Business Administration']._id }
         ];
 
         for (const sub of subjects) {

@@ -202,17 +202,23 @@ const RegisterPage = () => {
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300 px-1">Password</label>
                                         <div className="relative">
                                             <input
-                                                className="w-full bg-gray-50 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 transition-all outline-none"
+                                                className="w-full bg-gray-50 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 pl-4 pr-12 transition-all outline-none"
                                                 placeholder="••••••••"
                                                 minLength="6"
-                                                type="password"
+                                                type={showPassword ? 'text' : 'password'}
                                                 name="password"
                                                 value={formData.password}
                                                 onChange={handleChange}
                                                 required
                                             />
-                                            <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" type="button">
-                                                <span className="material-symbols-rounded text-lg">visibility_off</span>
+                                            <button
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                <span className="material-symbols-rounded text-lg">
+                                                    {showPassword ? 'visibility_off' : 'visibility'}
+                                                </span>
                                             </button>
                                         </div>
                                     </div>
@@ -261,7 +267,7 @@ const RegisterPage = () => {
                                     </div>
 
                                     <button
-                                        className="w-full bg-primary text-gray-900 font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all active:scale-[0.98] mt-4 disabled:opacity-50"
+                                        className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all active:scale-[0.98] mt-6 disabled:opacity-50"
                                         type="submit"
                                         disabled={loading}
                                     >

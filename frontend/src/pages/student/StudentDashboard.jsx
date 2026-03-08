@@ -14,6 +14,8 @@ const StudentDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -28,24 +30,46 @@ const StudentDashboard = () => {
         { path: "/student/special", icon: "folder", label: "Shared Resources" },
     ];
 
+    // Close mobile menu when a link is clicked
+    const handleNavClick = () => {
+        setIsMobileMenuOpen(false);
+    };
+
     return (
         <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-200">
+            {/* Mobile Menu Backdrop */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Sidebar Navigation */}
-            <aside className="w-64 flex-shrink-0 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-border-dark hidden lg:flex flex-col">
-                <div className="p-6 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <span className="material-symbols-rounded text-white text-xl">school</span>
+            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-border-dark flex flex-col transform transition-transform duration-300 ease-in-out lg:transform-none ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="p-6 flex items-center justify-between lg:justify-start gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <span className="material-symbols-rounded text-white text-xl">school</span>
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
+                    <button
+                        className="lg:hidden text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <span className="material-symbols-rounded">close</span>
+                    </button>
                 </div>
 
-                <nav className="flex-1 px-4 space-y-1 mt-4">
+                <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto">
                     {navLinks.map((link, idx) => {
                         const isActive = link.exact ? location.pathname === link.path : location.pathname.startsWith(link.path) && link.path !== "#";
                         return (
                             <Link
                                 key={idx}
                                 to={link.path}
+                                onClick={handleNavClick}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${isActive
                                     ? 'bg-primary/10 text-primary'
                                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
@@ -59,11 +83,11 @@ const StudentDashboard = () => {
                 </nav>
 
                 <div className="p-4 mt-auto space-y-2">
-                    <Link to="/student/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-slate-500 dark:text-slate-400 font-medium">
+                    <Link to="/student/profile" onClick={handleNavClick} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-slate-500 dark:text-slate-400 font-medium">
                         <span className="material-symbols-rounded">person</span>
                         <span>Profile</span>
                     </Link>
-                    <div className="bg-slate-100 dark:bg-white/5 rounded-2xl p-4">
+                    <div className="bg-slate-100 dark:bg-white/5 rounded-2xl p-4 hidden lg:block">
                         <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">STUDENT PORTAL</p>
                         <p className="text-sm border-t border-slate-200 dark:border-border-dark pt-2 mt-2">EduSphere MVP v1.0</p>
                     </div>
@@ -78,33 +102,43 @@ const StudentDashboard = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto relative">
-                <header className="sticky top-0 z-30 flex items-center justify-between px-8 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-transparent">
-                    <div>
-                        <h2 className="text-2xl font-bold">Student Dashboard</h2>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">Welcome back, {user?.name || 'Student'}!</p>
+            <main className="flex-1 overflow-y-auto relative w-full">
+                <header className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-8 py-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-transparent">
+                    <div className="flex items-center gap-3">
+                        <button
+                            className="lg:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg"
+                            onClick={() => setIsMobileMenuOpen(true)}
+                        >
+                            <span className="material-symbols-rounded">menu</span>
+                        </button>
+                        <div className="hidden sm:block">
+                            <h2 className="text-xl lg:text-2xl font-bold">Student Dashboard</h2>
+                            <p className="text-xs lg:text-sm text-slate-500 dark:text-slate-400">Welcome, {user?.name || 'Student'}!</p>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 lg:gap-4">
                         <div className="hidden md:block">
-                            <GlobalSearch placeholder="Search courses, materials..." />
+                            <GlobalSearch placeholder="Search courses..." />
                         </div>
                         <button className="p-2 text-slate-500 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors relative">
                             <span className="material-symbols-rounded">notifications</span>
                             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
                         </button>
-                        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-border-dark">
-                            {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
-                                <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
-                            ) : (
-                                <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`https://ui-avatars.com/api/?name=${user?.name || 'Student'}&background=2DD4BF&color=fff`} />
-                            )}
+                        <div className="flex items-center gap-3 pl-2 lg:pl-4 border-l border-slate-200 dark:border-border-dark">
+                            <Link to="/student/profile">
+                                {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
+                                    <img alt="User Profile" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
+                                ) : (
+                                    <img alt="User Profile" className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`https://ui-avatars.com/api/?name=${user?.name || 'Student'}&background=2DD4BF&color=fff`} />
+                                )}
+                            </Link>
                         </div>
-                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                        <div className="h-6 lg:h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
                         <button
                             onClick={toggleTheme}
-                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            className="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
-                            <span className="material-symbols-rounded text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
+                            <span className="material-symbols-rounded text-[18px] lg:text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
                         </button>
                     </div>
                 </header>
@@ -562,7 +596,7 @@ const StudentSpecial = () => {
 
                             <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <a
-                                    href={`http://localhost:5000${resource.fileUrl}`}
+                                    href={resource.fileUrl?.startsWith('http') ? resource.fileUrl : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${resource.fileUrl}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-full flex items-center justify-center gap-2 py-2 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group-hover:bg-primary group-hover:text-slate-900 group-hover:border-primary"

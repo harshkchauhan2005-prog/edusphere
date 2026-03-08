@@ -149,7 +149,7 @@ const StudentMaterialList = ({ courseId }) => {
                                 <h4 className="font-bold text-slate-900 dark:text-white truncate">{mat.title}</h4>
                                 <p className="text-xs text-slate-500">{new Date(mat.createdAt).toLocaleDateString()}</p>
                             </div>
-                            <a href={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
+                            <a href={mat.fileUrl?.startsWith('http') ? mat.fileUrl : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${mat.fileUrl}`} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
                                 <span className="material-symbols-rounded">download</span>
                             </a>
                         </div>
@@ -470,7 +470,7 @@ const SubmitAssignment = ({ assignment, courseId, onBack }) => {
                 </p>
                 {assignment.facultyAttachment && (
                     <div className="mt-4">
-                        <a href={`http://localhost:5000${assignment.facultyAttachment}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <a href={assignment.facultyAttachment?.startsWith('http') ? assignment.facultyAttachment : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${assignment.facultyAttachment}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                             <span className="material-symbols-rounded text-[18px]">attachment</span> Faculty Attachment
                         </a>
                     </div>
@@ -481,7 +481,7 @@ const SubmitAssignment = ({ assignment, courseId, onBack }) => {
                 <div className="mb-8 p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl">
                     <h4 className="font-bold mb-4">Your Submission</h4>
                     <div className="flex items-center justify-between">
-                        <a href={`http://localhost:5000${previousAttempt.submissionFile}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium text-sm flex items-center gap-2">
+                        <a href={previousAttempt.submissionFile?.startsWith('http') ? previousAttempt.submissionFile : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${previousAttempt.submissionFile}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium text-sm flex items-center gap-2">
                             <span className="material-symbols-rounded text-sm">download</span> Download your uploaded file
                         </a>
                         <span className="text-xs text-slate-500">Submitted: {new Date(previousAttempt.submittedAt).toLocaleString()}</span>

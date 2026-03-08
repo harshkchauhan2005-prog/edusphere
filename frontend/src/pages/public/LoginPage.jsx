@@ -6,6 +6,7 @@ import api from '../../services/api';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -117,15 +118,25 @@ const LoginPage = () => {
                                 <div className="relative">
                                     <span className="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
                                     <input
-                                        className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                        className="w-full pl-12 pr-12 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                                         id="password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         required
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         disabled={loading}
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none"
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        <span className="material-symbols-rounded text-lg">
+                                            {showPassword ? 'visibility_off' : 'visibility'}
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -134,7 +145,7 @@ const LoginPage = () => {
                             </div>
                             <button
                                 disabled={loading}
-                                className="w-full bg-primary hover:bg-teal-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
+                                className="w-full bg-primary hover:bg-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 mt-6"
                                 type="submit"
                             >
                                 {loading ? 'Signing in...' : 'Sign In'}

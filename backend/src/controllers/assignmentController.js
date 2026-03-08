@@ -18,7 +18,7 @@ exports.createAssignment = async (req, res, next) => {
         req.body.courseId = courseId;
 
         if (req.file) {
-            req.body.facultyAttachment = `/uploads/${req.file.filename}`;
+            req.body.facultyAttachment = req.file.path;
         }
 
         const assignment = await Assignment.create(req.body);
@@ -75,12 +75,12 @@ exports.submitAssignment = async (req, res, next) => {
 
         if (existingIndex !== -1) {
             // Overwrite previous submission
-            assignment.submissions[existingIndex].submissionFile = `/uploads/${req.file.filename}`;
+            assignment.submissions[existingIndex].submissionFile = req.file.path;
             assignment.submissions[existingIndex].submittedAt = Date.now();
         } else {
             assignment.submissions.push({
                 studentId: req.user.id,
-                submissionFile: `/uploads/${req.file.filename}`
+                submissionFile: req.file.path
             });
         }
 
