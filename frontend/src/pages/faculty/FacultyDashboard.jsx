@@ -92,7 +92,7 @@ const FacultyDashboard = () => {
                         <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
                             <Link to="/faculty/profile">
                                 {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
-                                    <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
+                                    <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={user.profilePhoto.startsWith('http') ? user.profilePhoto : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
                                 ) : (
                                     <img alt="Profile Avatar" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src={`https://ui-avatars.com/api/?name=${user?.name || 'Professor'}&background=1E3A8A&color=fff`} />
                                 )}

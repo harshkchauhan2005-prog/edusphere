@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
             folder: 'edusphere_uploads',
             resource_type: 'auto', // Important for non-image files like PDF, ZIP
             public_id: `${file.fieldname}-${Date.now()}`
-        }
+        };
     },
 });
 

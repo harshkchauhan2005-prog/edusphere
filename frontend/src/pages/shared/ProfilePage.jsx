@@ -16,6 +16,7 @@ const ProfilePage = () => {
         if (!user || !user.profilePhoto || user.profilePhoto === 'no-photo.jpg') {
             return `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=14b8a6&color=fff&size=200&font-size=0.4&bold=true`;
         }
+        if (user.profilePhoto.startsWith('http')) return user.profilePhoto;
         const baseURL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
         return user.profilePhoto.startsWith('/uploads')
             ? `${baseURL}${user.profilePhoto}`
