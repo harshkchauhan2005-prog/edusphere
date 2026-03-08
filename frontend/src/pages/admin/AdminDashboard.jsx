@@ -22,9 +22,9 @@ const AdminDashboard = () => {
     const navLinks = [
         { path: "/admin", icon: "dashboard", label: "Dashboard", exact: true },
         { path: "/admin/users", icon: "group", label: "User Management" },
-        { path: "/admin/courses", icon: "library_books", label: "Course Management" },
-        { path: "/admin/departments", icon: "domain", label: "Departments" },
-        { path: "/admin/subjects", icon: "subject", label: "Subjects" }
+        { path: "/admin/departments", icon: "domain", label: "Department Management" },
+        { path: "/admin/enrollments", icon: "how_to_reg", label: "Enrollments" },
+        { path: "/admin/settings", icon: "settings", label: "Settings" }
     ];
 
     return (

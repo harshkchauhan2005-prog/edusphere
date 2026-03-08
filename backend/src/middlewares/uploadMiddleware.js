@@ -24,9 +24,11 @@ const storage = new CloudinaryStorage({
             throw new Error('Error: Only documents, images, and archives are allowed!');
         }
 
+        const isImage = /jpeg|jpg|png|gif/.test(path.extname(file.originalname).toLowerCase());
+
         return {
             folder: 'edusphere_uploads',
-            resource_type: 'auto', // Important for non-image files like PDF, ZIP
+            resource_type: isImage ? 'image' : 'raw', // Force 'raw' for PDFs and docs to prevent delivery issues
             public_id: `${file.fieldname}-${Date.now()}`
         };
     },
