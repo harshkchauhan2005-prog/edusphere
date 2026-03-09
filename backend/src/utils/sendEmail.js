@@ -27,7 +27,9 @@ const sendEmail = async (options) => {
         },
         tls: {
             rejectUnauthorized: false
-        }
+        },
+        // Force IPv4 to bypass Render's IPv6 routing issues with Gmail
+        family: 4
     });
 
     // Define email options
