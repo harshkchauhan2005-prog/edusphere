@@ -1,5 +1,8 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
+// Force IPv4 resolution to prevent Render's ENETUNREACH error with Gmail SMTP over IPv6
+dns.setDefaultResultOrder('ipv4first');
 const sendEmail = async (options) => {
     // Strip accidental quotes from environment variables
     const cleanUser = (process.env.SMTP_EMAIL || '').replace(/^["']|["']$/g, '').trim();
