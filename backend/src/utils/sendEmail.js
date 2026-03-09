@@ -1,27 +1,38 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    // Configure Nodemailer for Brevo SMTP Relay
+    // Commercial SMTP relays like Brevo on port 587 bypass Render outbound SMTP blocks
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false,
+        auth: {
+            // The user login is specific to the Brevo account
+            user: 'a46e8b001@smtp-brevo.com',
+            pass: process.env.BREVO_API_KEY
+        }
+    });
 
     const fromName = (process.env.FROM_NAME || 'EduSphere Admin').replace(/^["']|["']$/g, '').trim();
-    // Note: Resend requires a verified domain to send FROM. 
-    // Usually 'onboarding@resend.dev' is used for testing if no domain is verified.
-    const fromEmail = (process.env.FROM_EMAIL || 'onboarding@resend.dev').replace(/^["']|["']$/g, '').trim();
+    // Brevo requires the sender email to be verified in their dashboard
+    const fromEmail = (process.env.FROM_EMAIL || 'igxenon638@gmail.com').replace(/^["']|["']$/g, '').trim();
+
+    const message = {
+        from: `"${fromName}" <${fromEmail}>`,
+        to: options.email,
+        subject: options.subject,
+        text: options.message,
+        html: options.html
+    };
 
     try {
-        const data = await resend.emails.send({
-            from: `${fromName} <${fromEmail}>`,
-            to: options.email,
-            subject: options.subject,
-            text: options.message,
-            html: options.html,
-        });
-
-        console.log('Email sent successfully via Resend:', data.id);
-        return data;
+        const info = await transporter.sendMail(message);
+        console.log('Email sent successfully via Brevo SMTP. Message ID:', info.messageId);
+        return info;
     } catch (error) {
-        console.error('CRITICAL: Resend Email Failed to send to:', options.email);
-        console.error('Error:', error);
+        console.error('CRITICAL: Brevo SMTP Email Failed to send to:', options.email);
+        console.error('Error Details:', error.message);
         throw error;
     }
 };
