@@ -12,11 +12,13 @@ const sendEmail = async (options) => {
     let port = process.env.SMTP_PORT || 2525;
     let secure = process.env.SMTP_PORT == 465; // True for 465, false for others
 
-    // Hardcode overrides for Gmail to bypass Render configuration issues (e.g., ETIMEDOUT on 587)
+    // Hardcode overrides for Gmail to bypass Render configuration issues
+    let requireTLS = false;
     if (host.includes('gmail.com') || cleanUser.includes('@gmail.com')) {
         host = 'smtp.gmail.com';
-        port = 465;
-        secure = true;
+        port = 587;
+        secure = false;
+        requireTLS = true;
     }
 
     // Create a transporter
@@ -24,6 +26,7 @@ const sendEmail = async (options) => {
         host,
         port,
         secure,
+        requireTLS,
         auth: {
             user: cleanUser,
             pass: cleanPass
