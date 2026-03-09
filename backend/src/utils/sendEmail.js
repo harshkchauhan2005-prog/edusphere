@@ -1,69 +1,29 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const { Resend } = require('resend');
 
-// Force IPv4 resolution to prevent Render's ENETUNREACH error with Gmail SMTP over IPv6
-dns.setDefaultResultOrder('ipv4first');
 const sendEmail = async (options) => {
-    // Strip accidental quotes from environment variables
-    const cleanUser = (process.env.SMTP_EMAIL || '').replace(/^["']|["']$/g, '').trim();
-    const cleanPass = (process.env.SMTP_PASSWORD || '').replace(/^["']|["']$/g, '').trim();
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    let host = process.env.SMTP_HOST || 'smtp.mailtrap.io';
-    let port = process.env.SMTP_PORT || 2525;
-    let secure = process.env.SMTP_PORT == 465; // True for 465, false for others
+    const fromName = (process.env.FROM_NAME || 'EduSphere Admin').replace(/^["']|["']$/g, '').trim();
+    // Note: Resend requires a verified domain to send FROM. 
+    // Usually 'onboarding@resend.dev' is used for testing if no domain is verified.
+    const fromEmail = (process.env.FROM_EMAIL || 'onboarding@resend.dev').replace(/^["']|["']$/g, '').trim();
 
-    // Hardcode overrides for Gmail to bypass Render configuration issues
-    let requireTLS = false;
-    if (host.includes('gmail.com') || cleanUser.includes('@gmail.com')) {
-        host = 'smtp.gmail.com';
-        port = 587;
-        secure = false;
-        requireTLS = true;
+    try {
+        const data = await resend.emails.send({
+            from: `${fromName} <${fromEmail}>`,
+            to: options.email,
+            subject: options.subject,
+            text: options.message,
+            html: options.html,
+        });
+
+        console.log('Email sent successfully via Resend:', data.id);
+        return data;
+    } catch (error) {
+        console.error('CRITICAL: Resend Email Failed to send to:', options.email);
+        console.error('Error:', error);
+        throw error;
     }
-
-    // Create a transporter
-    const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure,
-        requireTLS,
-        auth: {
-            user: cleanUser,
-            pass: cleanPass
-        },
-        tls: {
-            rejectUnauthorized: false
-        },
-        // Force IPv4 to bypass Render's IPv6 routing issues with Gmail
-        family: 4
-    });
-
-    // Define email options
-    const cleanFromName = (process.env.FROM_NAME || 'EduSphere Admin').replace(/^["']|["']$/g, '').trim();
-    const cleanFromEmail = (process.env.FROM_EMAIL || 'noreply@edusphere.com').replace(/^["']|["']$/g, '').trim();
-
-    const message = {
-        from: `"${cleanFromName}" <${cleanFromEmail}>`,
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-        html: options.html
-    };
-
-    // Mock email for local development testing
-    if (process.env.SMTP_EMAIL === 'dummy_user') {
-        console.log('--- MOCK EMAIL SENT ---');
-        console.log(`To: ${options.email}`);
-        console.log(`Subject: ${options.subject}`);
-        console.log(`Message: \n${options.message}`);
-        console.log('-----------------------');
-        return;
-    }
-
-    // Send the email
-    const info = await transporter.sendMail(message);
-
-    console.log('Message sent: %s', info.messageId);
 };
 
 module.exports = sendEmail;
