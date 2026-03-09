@@ -5,14 +5,28 @@ const sendEmail = async (options) => {
     const cleanUser = (process.env.SMTP_EMAIL || '').replace(/^["']|["']$/g, '').trim();
     const cleanPass = (process.env.SMTP_PASSWORD || '').replace(/^["']|["']$/g, '').trim();
 
+    let host = process.env.SMTP_HOST || 'smtp.mailtrap.io';
+    let port = process.env.SMTP_PORT || 2525;
+    let secure = process.env.SMTP_PORT == 465; // True for 465, false for others
+
+    // Hardcode overrides for Gmail to bypass Render configuration issues (e.g., ETIMEDOUT on 587)
+    if (host.includes('gmail.com') || cleanUser.includes('@gmail.com')) {
+        host = 'smtp.gmail.com';
+        port = 465;
+        secure = true;
+    }
+
     // Create a transporter
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.mailtrap.io',
-        port: process.env.SMTP_PORT || 2525,
-        secure: process.env.SMTP_PORT == 465, // True for 465, false for others
+        host,
+        port,
+        secure,
         auth: {
             user: cleanUser,
             pass: cleanPass
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     });
 
