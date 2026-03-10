@@ -185,11 +185,8 @@ const Overview = () => {
                 setQuizCount(totalQuizzes);
                 setActiveAssignments(assignments.filter(a => new Date(a.deadline) > new Date()).sort((a, b) => new Date(a.deadline) - new Date(b.deadline)).slice(0, 5));
 
-                // Filter activity to last 24 hours
-                const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-                const recentActivities = activities.filter(a => new Date(a.date) >= twentyFourHoursAgo);
-
-                setRecentActivity(recentActivities.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
+                // Get top 5 recent activities regardless of 24h limit for better UX
+                setRecentActivity(activities.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5));
             } catch (err) {
                 console.error('Failed to fetch enrolled courses', err);
             }

@@ -201,7 +201,7 @@ const StudentQuizList = ({ courseId }) => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {quizzes.map(q => {
-                        const previousAttempt = q.results.find(r => r.studentId === user.id);
+                        const previousAttempt = q.results.find(r => r.studentId === (user?._id || user?.id));
                         return (
                             <div key={q._id} className="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-2xl p-6 shadow-sm flex flex-col h-full">
                                 <div className="flex-grow mb-4">
@@ -381,7 +381,7 @@ const StudentAssignmentList = ({ courseId }) => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {assignments.map(a => {
-                        const previousAttempt = a.submissions?.find(s => s.studentId === user.id);
+                        const previousAttempt = a.submissions?.find(s => s.studentId === (user?._id || user?.id));
                         const isPastDeadline = Date.now() > new Date(a.deadline).getTime();
 
                         return (
@@ -436,7 +436,7 @@ const SubmitAssignment = ({ assignment, courseId, onBack }) => {
     const [file, setFile] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
-    const previousAttempt = assignment.submissions?.find(s => s.studentId === user.id);
+    const previousAttempt = assignment.submissions?.find(s => s.studentId === (user?._id || user?.id));
     const isPastDeadline = Date.now() > new Date(assignment.deadline).getTime();
     const canSubmit = !isPastDeadline && (!previousAttempt || previousAttempt.grade === undefined); // allow resubmit if not graded and not past deadline
 

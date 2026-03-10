@@ -14,7 +14,7 @@ exports.uploadResource = async (req, res, next) => {
         const resource = await SpecialResource.create({
             title,
             semester: req.user.semester,
-            fileUrl: `/uploads/${req.file.filename}`,
+            fileUrl: req.file.path,
             uploadedBy: req.user.id
         });
 
