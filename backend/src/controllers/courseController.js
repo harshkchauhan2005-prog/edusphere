@@ -223,6 +223,37 @@ exports.addAnnouncement = async (req, res, next) => {
     }
 };
 
+// @desc    Delete announcement from a course
+// @route   DELETE /api/courses/:courseId/announcements/:announcementId
+// @access  Private/Faculty
+exports.deleteAnnouncement = async (req, res, next) => {
+    try {
+        const course = await Course.findById(req.params.courseId);
+        if (!course) {
+            return res.status(404).json({ success: false, message: 'Course not found' });
+        }
+
+        // Only allow assigned faculty or admin
+        if (req.user.role === 'faculty' && course.facultyId.toString() !== req.user.id) {
+            return res.status(403).json({ success: false, message: 'Not authorized to delete announcements for this course' });
+        }
+
+        // Remove the announcement
+        course.announcements = course.announcements.filter(
+            (announcement) => announcement._id.toString() !== req.params.announcementId
+        );
+
+        await course.save();
+
+        res.status(200).json({
+            success: true,
+            data: course.announcements
+        });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+};
+
 // @desc    Global search across courses, materials, quizzes
 // @route   GET /api/courses/search?q=query
 // @access  Private

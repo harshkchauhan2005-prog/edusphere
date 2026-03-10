@@ -123,6 +123,17 @@ const AnnouncementPanel = ({ courseId, announcements, onRefresh }) => {
         }
     };
 
+    const handleDelete = async (announcementId) => {
+        if (!window.confirm('Are you sure you want to delete this announcement?')) return;
+        try {
+            await api.delete(`/courses/${courseId}/announcements/${announcementId}`);
+            onRefresh();
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || 'Failed to delete announcement');
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center">
@@ -176,8 +187,15 @@ const AnnouncementPanel = ({ courseId, announcements, onRefresh }) => {
             ) : (
                 <div className="space-y-4">
                     {announcements.map((a, idx) => (
-                        <div key={idx} className="bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-primary/30 transition-colors">
-                            <div className="flex items-start justify-between mb-3">
+                        <div key={idx} className="relative bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:border-primary/30 transition-colors">
+                            <button
+                                onClick={() => handleDelete(a._id)}
+                                className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                                title="Delete Announcement"
+                            >
+                                <span className="material-symbols-rounded text-xl">delete</span>
+                            </button>
+                            <div className="flex items-start justify-between mb-3 pr-8">
                                 <h4 className="font-bold text-lg text-slate-900 dark:text-white">{a.title}</h4>
                                 <span className="text-xs text-slate-400 shrink-0 ml-4">{new Date(a.createdAt).toLocaleDateString()}</span>
                             </div>

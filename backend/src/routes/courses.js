@@ -8,6 +8,7 @@ const {
     getAllCourses,
     getCourseAnalytics,
     addAnnouncement,
+    deleteAnnouncement,
     searchAll
 } = require('../controllers/courseController');
 
@@ -45,5 +46,6 @@ router.get('/:courseId/analytics', authorize('faculty', 'admin'), getCourseAnaly
 
 // Announcements
 router.post('/:courseId/announcements', authorize('faculty', 'admin'), addAnnouncement);
+router.delete('/:courseId/announcements/:announcementId', authorize('faculty', 'admin'), deleteAnnouncement);
 
 module.exports = router;
