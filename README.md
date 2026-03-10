@@ -131,25 +131,6 @@ npm start
 
 ---
 
-## 📸 Screenshots
-
-*(Add screenshots of your application here. You can upload them to a `screenshots` folder in your repo or link them directly. Examples below:)*
-
-<details>
-<summary>Click to view screenshots</summary>
-
-*   **Student Dashboard:**
-    *(Insert image link here)*
-*   **Faculty Grading Interface:**
-    *(Insert image link here)*
-*   **Admin Architecture Manager:**
-    *(Insert image link here)*
-*   **Responsive Mobile View:**
-    *(Insert image link here)*
-
-</details>
-
----
 
 ## 🤝 Contributing
 
