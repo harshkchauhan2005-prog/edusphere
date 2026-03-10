@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/harshkchauhan2005-prog/edusphere/main/frontend/public/vite.svg" alt="EduSphere Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/harshkchauhan2005-prog/edusphere/main/frontend/public/Eduphere_logo.png" alt="EduSphere Logo" width="120" />
   
   # EduSphere
 
