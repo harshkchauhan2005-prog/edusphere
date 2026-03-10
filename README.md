@@ -5,7 +5,7 @@
 
   **A modern, comprehensive web-based platform for educational institutions to seamlessly manage administration, faculty, and student interactions.**
 
-  [🚀 Live Demo](https://edusphere-enlm.onrender.com)
+  [🚀 Live Demo](https://edusphere-kappa-black.vercel.app)
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![React](https://img.shields.io/badge/React-19-61dafb.svg?logo=react)](https://react.dev/)
