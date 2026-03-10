@@ -13,6 +13,12 @@ const AdminDashboard = () => {
     const { isDark, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Close sidebar when route changes on mobile
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         logout();
@@ -28,16 +34,27 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className={`flex min-h-screen ${isDark ? 'dark bg-background-dark text-slate-100' : 'bg-background-light text-slate-900'} transition-colors duration-200`}>
+        <div className={`flex h-screen overflow-hidden ${isDark ? 'dark bg-background-dark text-slate-100' : 'bg-background-light text-slate-900'} transition-colors duration-200`}>
+            {/* Mobile Sidebar Backdrop */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar Navigation */}
-            <aside className="w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shrink-0">
-                <div className="p-6 flex items-center gap-3">
+            <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} shrink-0`}>
+                <div className="p-6 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white">
                             <span className="material-symbols-rounded text-xl">admin_panel_settings</span>
                         </div>
                         <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
                     </div>
+                    <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-slate-500 hover:text-slate-900 dark:hover:text-white pb-1">
+                        <span className="material-symbols-rounded">close</span>
+                    </button>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto">
@@ -60,7 +77,7 @@ const AdminDashboard = () => {
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800 mt-auto">
                     <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl mb-4">
                         {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
                             <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={user.profilePhoto.startsWith('http') ? user.profilePhoto : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
@@ -84,8 +101,17 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative w-full">
-                <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-card-dark/80 backdrop-blur-md flex items-center justify-end px-8 sticky top-0 z-10 w-full">
+            <main className="flex-1 overflow-y-auto relative w-full">
+                <header className="flex items-center justify-between lg:justify-end px-8 py-4 sticky top-0 bg-white/80 dark:bg-card-dark/80 backdrop-blur-md z-30 border-b border-transparent">
+                    <div className="lg:hidden flex items-center gap-3">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="p-2 -ml-3 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                        >
+                            <span className="material-symbols-rounded">menu</span>
+                        </button>
+                        <h2 className="font-bold text-lg hidden sm:block">Admin</h2>
+                    </div>
                     <div className="flex items-center gap-4">
                         <button className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 relative transition-colors">
                             <span className="material-symbols-rounded text-[20px]">notifications</span>
@@ -101,7 +127,7 @@ const AdminDashboard = () => {
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="px-4 sm:px-8 pb-12 mt-4">
                     <Routes>
                         <Route path="/" element={<AdminOverview />} />
                         <Route path="/users" element={<AdminUsers />} />

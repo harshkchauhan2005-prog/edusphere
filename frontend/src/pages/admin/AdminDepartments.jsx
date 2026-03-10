@@ -99,7 +99,7 @@ const AdminDepartments = () => {
     };
 
     return (
-        <div>
+        <div className="admin-departments-container">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
                     <h1 className="text-2xl font-bold">Departments & Subjects</h1>
@@ -259,39 +259,41 @@ const AdminDepartments = () => {
                         </div>
                     ) : (
                         <div className="bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-                            <table className="w-full text-left">
-                                <thead className="bg-slate-50 dark:bg-slate-800/30">
-                                    <tr>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Code</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Subject Name</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Department</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-                                    {subjects.map(subj => {
-                                        const deptObj = typeof subj.departmentId === 'object' ? subj.departmentId : departments.find(d => d._id === subj.departmentId);
-                                        return (
-                                            <tr key={subj._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20">
-                                                <td className="px-6 py-4">
-                                                    <span className="font-mono text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">{subj.code}</span>
-                                                </td>
-                                                <td className="px-6 py-4 font-bold">{subj.name}</td>
-                                                <td className="px-6 py-4 text-sm text-slate-500">{deptObj ? deptObj.name : 'Unknown'}</td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <button
-                                                        onClick={() => handleDeleteSubj(subj._id)}
-                                                        className="text-slate-400 hover:text-red-500 transition-colors"
-                                                        title="Remove Subject"
-                                                    >
-                                                        <span className="material-symbols-rounded text-xl">delete</span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left">
+                                    <thead className="bg-slate-50 dark:bg-slate-800/30">
+                                        <tr>
+                                            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Code</th>
+                                            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Subject Name</th>
+                                            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Department</th>
+                                            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                                        {subjects.map(subj => {
+                                            const deptObj = typeof subj.departmentId === 'object' ? subj.departmentId : departments.find(d => d._id === subj.departmentId);
+                                            return (
+                                                <tr key={subj._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+                                                    <td className="px-6 py-4">
+                                                        <span className="font-mono text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded">{subj.code}</span>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-bold">{subj.name}</td>
+                                                    <td className="px-6 py-4 text-sm text-slate-500">{deptObj ? deptObj.name : 'Unknown'}</td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <button
+                                                            onClick={() => handleDeleteSubj(subj._id)}
+                                                            className="text-slate-400 hover:text-red-500 transition-colors"
+                                                            title="Remove Subject"
+                                                        >
+                                                            <span className="material-symbols-rounded text-xl">delete</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </div>

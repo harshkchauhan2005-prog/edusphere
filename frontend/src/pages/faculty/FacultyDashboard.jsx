@@ -13,6 +13,12 @@ const FacultyDashboard = () => {
     const { isDark, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Close sidebar when route changes on mobile
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         logout();
@@ -28,19 +34,30 @@ const FacultyDashboard = () => {
     ];
 
     return (
-        <div className="flex min-h-screen bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 transition-colors duration-200">
+        <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 transition-colors duration-200">
+            {/* Mobile Sidebar Backdrop */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar Navigation */}
-            <aside className="w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 overflow-y-auto shrink-0">
-                <div className="p-6 flex items-center gap-2">
+            <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white dark:bg-card-dark border-r border-slate-200 dark:border-slate-800 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} shrink-0 pt-1`}>
+                <div className="p-6 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
                             <span className="material-symbols-rounded text-xl">auto_stories</span>
                         </div>
                         <h1 className="text-xl font-bold tracking-tight">EduSphere</h1>
                     </div>
+                    <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-slate-500 hover:text-slate-900 dark:hover:text-white pb-1">
+                        <span className="material-symbols-rounded">close</span>
+                    </button>
                 </div>
 
-                <nav className="flex-1 px-4 py-4 space-y-1 mt-2 overflow-y-auto">
+                <nav className="flex-1 px-4 space-y-1 mt-4 overflow-y-auto">
                     {navLinks.map((link, idx) => {
                         const isActive = link.exact ? location.pathname === link.path : location.pathname.startsWith(link.path) && link.path !== "#";
                         return (
@@ -59,29 +76,39 @@ const FacultyDashboard = () => {
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-                    <Link to="/faculty/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800 mt-auto">
+                    <Link to="/faculty/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400 font-medium">
                         <span className="material-symbols-rounded">person</span>
                         Profile
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all text-red-500 text-left cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 font-bold py-3 rounded-xl mt-2 text-sm transition-colors cursor-pointer"
                     >
-                        <span className="material-symbols-rounded">logout</span>
+                        <span className="material-symbols-rounded text-sm">logout</span>
                         Logout
                     </button>
                 </div>
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 p-8 relative w-full h-screen overflow-y-auto">
-                <header className="flex items-center justify-between gap-4 mb-8 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md z-30 py-2 -mx-8 px-8 border-b border-transparent">
-                    <div>
+            <main className="flex-1 overflow-y-auto relative w-full">
+                <header className="flex items-center justify-between lg:justify-end gap-4 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md z-30 py-4 px-4 sm:px-8 border-b border-transparent">
+                    <div className="lg:hidden flex items-center gap-3 mr-auto">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="p-2 -ml-2 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                        >
+                            <span className="material-symbols-rounded">menu</span>
+                        </button>
+                    </div>
+
+                    <div className="hidden lg:block mr-auto">
                         <h2 className="text-2xl font-bold">Faculty Dashboard</h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Welcome, {user?.name || 'Professor'}</p>
                     </div>
-                    <div className="flex items-center gap-4">
+
+                    <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                         <div className="hidden md:block">
                             <GlobalSearch placeholder="Search courses..." />
                         </div>
@@ -89,7 +116,7 @@ const FacultyDashboard = () => {
                             <span className="material-symbols-rounded text-[20px] text-slate-600 dark:text-slate-300">notifications</span>
                             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-card-dark"></span>
                         </button>
-                        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center gap-3 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-800">
                             <Link to="/faculty/profile">
                                 {user?.profilePhoto && user?.profilePhoto !== 'no-photo.jpg' ? (
                                     <img alt="User Profile" className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-800" src={user.profilePhoto.startsWith('http') ? user.profilePhoto : `${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000'}${user.profilePhoto.startsWith('/uploads') ? user.profilePhoto : '/uploads/profiles/' + user.profilePhoto}`} />
@@ -98,25 +125,28 @@ const FacultyDashboard = () => {
                                 )}
                             </Link>
                         </div>
-                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
                         <button
                             onClick={toggleTheme}
-                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            className="w-10 h-10 hidden sm:flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                             <span className="material-symbols-rounded text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
                         </button>
                     </div>
                 </header>
 
-                <Routes>
-                    <Route path="/" element={<FacultyOverview />} />
-                    <Route path="/courses" element={<FacultyCourses />} />
-                    <Route path="/courses/:courseId" element={<CourseManager />} />
-                    <Route path="/materials" element={<FacultyContentList type="materials" />} />
-                    <Route path="/quizzes" element={<FacultyContentList type="quizzes" />} />
-                    <Route path="/assignments" element={<FacultyContentList type="assignments" />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                </Routes>
+                <div className="px-4 sm:px-8 pb-12 mt-4">
+
+                    <Routes>
+                        <Route path="/" element={<FacultyOverview />} />
+                        <Route path="/courses" element={<FacultyCourses />} />
+                        <Route path="/courses/:courseId" element={<CourseManager />} />
+                        <Route path="/materials" element={<FacultyContentList type="materials" />} />
+                        <Route path="/quizzes" element={<FacultyContentList type="quizzes" />} />
+                        <Route path="/assignments" element={<FacultyContentList type="assignments" />} />
+                        <Route path="/profile" element={<ProfilePage />} />
+                    </Routes>
+                </div>
             </main>
         </div>
     );
